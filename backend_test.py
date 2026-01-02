@@ -314,45 +314,7 @@ def check_server_logs():
         print(f"❌ Error checking logs: {e}")
         return False
 
-def test_cors_configuration():
-    """Test CORS configuration"""
-    print("\n🔍 Testing CORS Configuration...")
-    try:
-        # Check CORS headers in a regular request
-        response = requests.get(
-            f"{BACKEND_URL}/",
-            headers={"Origin": "https://angular-portfolio-2.preview.emergentagent.com"},
-            timeout=10
-        )
-        
-        print(f"CORS Test Status Code: {response.status_code}")
-        
-        # Look for CORS headers
-        cors_headers = {}
-        for header, value in response.headers.items():
-            if 'access-control' in header.lower():
-                cors_headers[header] = value
-        
-        if cors_headers:
-            print("✅ CORS Headers Present:")
-            for header, value in cors_headers.items():
-                print(f"  {header}: {value}")
-            
-            # Check if essential CORS headers are present
-            has_origin = any('access-control-allow-origin' in h.lower() for h in cors_headers.keys())
-            if has_origin:
-                print("✅ CORS properly configured for cross-origin requests")
-                return True
-            else:
-                print("⚠️  CORS headers present but missing allow-origin")
-                return False
-        else:
-            print("❌ No CORS headers found")
-            return False
-            
-    except Exception as e:
-        print(f"❌ CORS test failed: {e}")
-        return False
+# CORS test removed - focusing on portfolio endpoints
 
 def main():
     """Run all portfolio API tests"""
