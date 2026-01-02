@@ -103,7 +103,7 @@ const Projects = () => {
                   {project.description}
                 </p>
                 
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-2 mb-4">
                   {project.technologies.map((tech, index) => (
                     <span
                       key={index}
@@ -113,6 +113,16 @@ const Projects = () => {
                     </span>
                   ))}
                 </div>
+                
+                {/* Special Dashboard Link for Enterprise Dashboard */}
+                {project.id === 1 && (
+                  <Link to="/dashboard">
+                    <Button className="w-full bg-[#00d9ff] hover:bg-[#00b8e6] text-black font-semibold mb-2">
+                      <Eye size={16} className="mr-2" />
+                      View Live Dashboard
+                    </Button>
+                  </Link>
+                )}
               </div>
             </div>
           ))}
