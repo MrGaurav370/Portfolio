@@ -1,14 +1,14 @@
 // Mock data for portfolio - will be replaced with backend integration
 
 export const profileData = {
-  name: "Alex Chen",
-  title: "Full Stack Developer",
-  tagline: "Building scalable web applications with modern technologies",
-  bio: "Passionate software engineer with 5+ years of experience in developing robust web applications. Specialized in React, Node.js, and cloud architecture. I transform complex problems into elegant, user-friendly solutions.",
-  email: "alex.chen@example.com",
-  github: "https://github.com/alexchen",
-  linkedin: "https://linkedin.com/in/alexchen",
-  twitter: "https://twitter.com/alexchen"
+  name: "Gaurav Gaur",
+  title: "Angular Frontend Developer",
+  tagline: "Building modern, scalable web applications with Angular 16",
+  bio: "Passionate frontend engineer with 5+ years of experience in developing robust web applications using Angular framework. Specialized in Angular 16, TypeScript, RxJS, and responsive design. I transform complex problems into elegant, user-friendly solutions.",
+  email: "gaurav.gaur@example.com",
+  github: "https://github.com/gauravgaur",
+  linkedin: "https://linkedin.com/in/gauravgaur",
+  twitter: "https://twitter.com/gauravgaur"
 };
 
 export const skills = [
