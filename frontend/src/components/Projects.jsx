@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { projects } from "../mock";
-import { ExternalLink, Github } from "lucide-react";
+import { ExternalLink, Github, Eye } from "lucide-react";
 import { Button } from "./ui/button";
+import { Link } from "react-router-dom";
 
 const Projects = () => {
   const [filter, setFilter] = useState("all");
