@@ -14,23 +14,23 @@ export const profileData = {
 export const skills = [
   {
     id: 1,
-    category: "Frontend",
-    items: ["React", "TypeScript", "Next.js", "Tailwind CSS", "Redux"]
+    category: "Angular 16 Core",
+    items: ["Components", "Directives", "Services", "Dependency Injection", "Modules"]
   },
   {
     id: 2,
-    category: "Backend",
-    items: ["Node.js", "Python", "FastAPI", "Express", "PostgreSQL"]
+    category: "State Management",
+    items: ["RxJS", "NgRx Store", "Signals", "Observables", "BehaviorSubject"]
   },
   {
     id: 3,
-    category: "DevOps",
-    items: ["Docker", "AWS", "CI/CD", "Kubernetes", "MongoDB"]
+    category: "UI & Styling",
+    items: ["Angular Material", "PrimeNG", "SCSS", "Responsive Design", "Flex Layout"]
   },
   {
     id: 4,
-    category: "Tools",
-    items: ["Git", "VS Code", "Figma", "Postman", "Jest"]
+    category: "TypeScript & Tools",
+    items: ["TypeScript", "Angular CLI", "Jasmine", "Karma", "Protractor"]
   }
 ];
 
