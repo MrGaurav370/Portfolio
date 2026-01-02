@@ -252,7 +252,6 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Basic API health check"
     - "Hero section with profile info"
     - "Navigation with smooth scroll"
     - "Skills section - Angular 16 focused"
