@@ -204,27 +204,34 @@ def test_cors_configuration():
     """Test CORS configuration"""
     print("\n🔍 Testing CORS Configuration...")
     try:
-        # Make a preflight request
-        response = requests.options(
+        # Check CORS headers in a regular request
+        response = requests.get(
             f"{BACKEND_URL}/",
-            headers={
-                "Origin": "https://angular-portfolio-2.preview.emergentagent.com",
-                "Access-Control-Request-Method": "GET"
-            },
+            headers={"Origin": "https://angular-portfolio-2.preview.emergentagent.com"},
             timeout=10
         )
         
-        print(f"CORS Preflight Status Code: {response.status_code}")
+        print(f"CORS Test Status Code: {response.status_code}")
         
-        # Check CORS headers in a regular request
-        response = requests.get(f"{BACKEND_URL}/", timeout=10)
-        cors_headers = {k: v for k, v in response.headers.items() if 'access-control' in k.lower()}
+        # Look for CORS headers
+        cors_headers = {}
+        for header, value in response.headers.items():
+            if 'access-control' in header.lower():
+                cors_headers[header] = value
         
         if cors_headers:
             print("✅ CORS Headers Present:")
             for header, value in cors_headers.items():
                 print(f"  {header}: {value}")
-            return True
+            
+            # Check if essential CORS headers are present
+            has_origin = any('access-control-allow-origin' in h.lower() for h in cors_headers.keys())
+            if has_origin:
+                print("✅ CORS properly configured for cross-origin requests")
+                return True
+            else:
+                print("⚠️  CORS headers present but missing allow-origin")
+                return False
         else:
             print("❌ No CORS headers found")
             return False
