@@ -25,7 +25,7 @@ const Hero = () => {
         <div className="max-w-4xl">
           <div className="mb-6">
             <div className="inline-block px-4 py-2 bg-[#00d9ff]/10 border border-[#00d9ff]/30 text-[#00d9ff] text-sm font-medium transform -skew-x-6">
-              <span className="inline-block transform skew-x-6">ANGULAR FRONTEND DEVELOPER</span>
+              <span className="inline-block transform skew-x-6">ANGULAR DEVELOPER</span>
             </div>
           </div>
 

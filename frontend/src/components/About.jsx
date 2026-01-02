@@ -6,19 +6,10 @@ const About = () => {
   const highlights = [
     {
       icon: <Code2 size={32} />,
-      title: "5+ Years",
+      title: "2+ Years",
       description: "Professional Experience"
     },
-    {
-      icon: <Zap size={32} />,
-      title: "50+ Projects",
-      description: "Successfully Delivered"
-    },
-    {
-      icon: <Users size={32} />,
-      title: "Happy Clients",
-      description: "Worldwide"
-    }
+    
   ];
 
   return (

@@ -10,7 +10,7 @@ const Skills = () => {
 
       <div className="container mx-auto px-6 relative z-10">
         <div className="text-center mb-16">
-          <span className="text-[#00d9ff] font-semibold tracking-wider uppercase text-sm">Angular 16 Skills</span>
+          <span className="text-[#00d9ff] font-semibold tracking-wider uppercase text-sm">Angular Framework Skills</span>
           <div className="w-20 h-1 bg-[#00d9ff] mt-2 mx-auto transform -skew-x-12"></div>
           <h2 className="text-4xl md:text-5xl font-black mt-4 text-white">
             My <span className="text-[#00d9ff]\">Expertise</span>
