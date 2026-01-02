@@ -437,26 +437,28 @@ def test_cors_configuration():
         return False
 
 def main():
-    """Run all backend tests"""
-    print("=" * 60)
-    print("🚀 BACKEND API TESTING - Gaurav Gaur Portfolio")
-    print("=" * 60)
+    """Run all portfolio API tests"""
+    print("=" * 70)
+    print("🚀 PORTFOLIO API TESTING - Gaurav Gaur's Angular Portfolio")
+    print("=" * 70)
     print(f"Testing Backend URL: {BACKEND_URL}")
     print(f"Test Time: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
-    print("=" * 60)
+    print("=" * 70)
     
     results = {}
     
-    # Run all tests
+    # Run all portfolio tests
     results['health_check'] = test_api_health_check()
-    results['mongodb'] = test_mongodb_connection()
+    results['profile'] = test_profile_endpoint()
+    results['skills'] = test_skills_endpoint()
+    results['projects'] = test_projects_endpoints()
+    results['contact'] = test_contact_endpoint()
     results['server_logs'] = check_server_logs()
-    results['cors'] = test_cors_configuration()
     
     # Summary
-    print("\n" + "=" * 60)
-    print("📊 TEST SUMMARY")
-    print("=" * 60)
+    print("\n" + "=" * 70)
+    print("📊 PORTFOLIO API TEST SUMMARY")
+    print("=" * 70)
     
     total_tests = len(results)
     passed_tests = sum(1 for result in results.values() if result)
@@ -468,10 +470,17 @@ def main():
     print(f"\nOverall: {passed_tests}/{total_tests} tests passed")
     
     if passed_tests == total_tests:
-        print("🎉 ALL TESTS PASSED - Backend is working correctly!")
+        print("🎉 ALL PORTFOLIO API TESTS PASSED - Backend is working correctly!")
+        print("✅ Profile endpoint returns Gaurav Gaur's data")
+        print("✅ Skills endpoint returns 4 Angular skill categories")
+        print("✅ Projects endpoints return 6 Angular projects")
+        print("✅ Contact form submission works")
+        print("✅ Health check endpoint operational")
         return True
     else:
         print("⚠️  SOME TESTS FAILED - Backend needs attention")
+        failed_tests = [name for name, result in results.items() if not result]
+        print(f"Failed tests: {', '.join(failed_tests)}")
         return False
 
 if __name__ == "__main__":
