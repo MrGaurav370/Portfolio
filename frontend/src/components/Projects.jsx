@@ -123,6 +123,26 @@ const Projects = () => {
                     </Button>
                   </Link>
                 )}
+                
+                {/* E-Learning Platform Link */}
+                {project.id === 2 && (
+                  <Link to="/elearning">
+                    <Button className="w-full bg-[#00d9ff] hover:bg-[#00b8e6] text-black font-semibold mb-2">
+                      <Eye size={16} className="mr-2" />
+                      View Live Platform
+                    </Button>
+                  </Link>
+                )}
+                
+                {/* Shopping Cart Link */}
+                {project.id === 5 && (
+                  <Link to="/shop">
+                    <Button className="w-full bg-[#00d9ff] hover:bg-[#00b8e6] text-black font-semibold mb-2">
+                      <Eye size={16} className="mr-2" />
+                      View Live Shop
+                    </Button>
+                  </Link>
+                )}
               </div>
             </div>
           ))}
