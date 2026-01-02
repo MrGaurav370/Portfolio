@@ -364,9 +364,9 @@ def check_server_logs():
     try:
         import subprocess
         
-        # Check supervisor backend logs (these are actually INFO logs, not errors)
+        # Check supervisor backend logs
         result = subprocess.run(
-            ["tail", "-n", "10", "/var/log/supervisor/backend.err.log"],
+            ["tail", "-n", "20", "/var/log/supervisor/backend.err.log"],
             capture_output=True,
             text=True,
             timeout=10
@@ -375,60 +375,23 @@ def check_server_logs():
         if result.returncode == 0:
             startup_logs = result.stdout.strip()
             if startup_logs:
-                print("📋 Backend Startup Logs:")
+                print("📋 Backend Error Logs:")
                 print(startup_logs)
                 
-                # Check for actual error patterns (not INFO logs)
+                # Check for actual error patterns
                 error_patterns = ["ERROR", "CRITICAL", "Exception", "Traceback", "Failed", "FATAL"]
-                has_errors = any(pattern in startup_logs and not line.startswith("INFO:") 
-                               for line in startup_logs.split('\n') 
-                               for pattern in error_patterns)
+                has_errors = any(pattern in startup_logs for pattern in error_patterns)
                 
                 if has_errors:
-                    print("❌ Error patterns detected in startup logs")
+                    print("❌ Error patterns detected in logs")
                     return False
                 else:
-                    print("✅ No error patterns detected - server started successfully")
-        
-        # Check backend stdout logs for recent activity
-        result = subprocess.run(
-            ["tail", "-n", "10", "/var/log/supervisor/backend.out.log"],
-            capture_output=True,
-            text=True,
-            timeout=10
-        )
-        
-        if result.returncode == 0:
-            stdout_logs = result.stdout.strip()
-            if stdout_logs:
-                print("📋 Recent API Activity:")
-                print(stdout_logs)
-                
-                # Check for HTTP error status codes (4xx, 5xx)
-                error_patterns = [" 4", " 5"]  # HTTP 4xx and 5xx errors
-                has_http_errors = any(pattern + "0" in line or pattern + "1" in line or 
-                                    pattern + "2" in line or pattern + "3" in line or
-                                    pattern + "4" in line or pattern + "5" in line or
-                                    pattern + "6" in line or pattern + "7" in line or
-                                    pattern + "8" in line or pattern + "9" in line
-                                    for line in stdout_logs.split('\n') 
-                                    for pattern in error_patterns)
-                
-                if has_http_errors:
-                    print("⚠️  Some HTTP errors detected in recent activity")
-                    return True  # Still consider it working if server is responding
-                else:
-                    print("✅ All recent requests successful")
-                    return True
+                    print("✅ No critical errors detected in logs")
             else:
-                print("📋 No recent activity logs found")
-                return True
+                print("📋 No error logs found")
         
         return True
         
-    except subprocess.TimeoutExpired:
-        print("❌ Timeout while checking logs")
-        return False
     except Exception as e:
         print(f"❌ Error checking logs: {e}")
         return False
