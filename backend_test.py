@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Backend API Testing for Gaurav Gaur's Angular Portfolio Application
-Tests the FastAPI backend endpoints and MongoDB connectivity
+Tests all portfolio API endpoints and MongoDB connectivity
 """
 
 import requests
