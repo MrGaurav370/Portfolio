@@ -205,9 +205,3 @@ This repository uses the `LICENSE` in the project root (if present). If you need
 - Add GitHub Pages / Vercel deployment example for the frontend
 
 ---
-
-If you want, I can:
-1. Add a `backend/.env.example` file with the recommended vars ✅
-2. Commit this README to your current branch (`docs/update-readme`) and open a PR for you ✅
-
-Would you like me to (pick one): `create .env.example`, `commit & push README` or `open PR`?
