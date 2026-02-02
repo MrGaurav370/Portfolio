@@ -84,7 +84,19 @@ Visit the frontend at http://localhost:3000 and the API at http://localhost:8000
 ---
 
 ## Environment variables
-Create `backend/.env` with at least:
+Create `backend/.env` with at least — or copy the ready-to-use template `backend/.env.example` and update values for your environment.
+
+PowerShell (recommended on Windows):
+
+```powershell
+Copy-Item backend\.env.example backend\.env
+```
+
+Unix/macOS:
+
+```bash
+cp backend/.env.example backend/.env
+```
 
 ```env
 MONGO_URL=mongodb://localhost:27017
