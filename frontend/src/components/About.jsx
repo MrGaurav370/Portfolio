@@ -8,7 +8,7 @@ const About = () => {
   const live = projects.filter((p) => p.route || p.demoUrl).length;
 
   const highlights = [
-    { icon: <Code2 size={32} />, title: "2+ Years", description: "Professional experience with Angular" },
+    { icon: <Code2 size={32} />, title: "3+ Years", description: "Professional experience with Angular" },
     { icon: <Layers size={32} />, title: `${projects.length} Projects`, description: "Applications designed and built" },
     { icon: <Rocket size={32} />, title: `${live} Live Demos`, description: "Playable right here in this portfolio" },
   ];

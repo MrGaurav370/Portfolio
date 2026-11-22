@@ -5,7 +5,7 @@ export const profileData = {
   name: "Gaurav Gaur",
   title: "Angular Frontend Developer",
   tagline: "Building modern, scalable web applications with Angular",
-  bio: "Passionate frontend engineer with 2+ years of experience building robust web applications with Angular. Specialized in Angular, TypeScript, RxJS and responsive design. I turn complex problems into elegant, user-friendly solutions.",
+  bio: "Passionate frontend engineer with 3+ years of experience building robust web applications with Angular. Specialized in Angular, TypeScript, RxJS and responsive design. I turn complex problems into elegant, user-friendly solutions.",
   email: "grvsinghthakur370@gmail.com",
   github: "https://github.com/MrGaurav370",
   linkedin: "https://www.linkedin.com/in/gauravgaur007/",

@@ -5,7 +5,7 @@ profile_data = {
     "title": "Angular Frontend Developer",
     "tagline": "Building modern, scalable web applications with Angular",
     "bio": (
-        "Passionate frontend engineer with 2+ years of experience building robust web "
+        "Passionate frontend engineer with 3+ years of experience building robust web "
         "applications with Angular. Specialized in Angular, TypeScript, RxJS and "
         "responsive design. I turn complex problems into elegant, user-friendly solutions."
     ),
