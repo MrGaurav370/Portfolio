@@ -5,7 +5,7 @@ import Reveal from "./Reveal";
 const Skills = () => {
   const { skills } = usePortfolio();
   return (
-    <section id="skills" className="py-24 bg-[#0a0a0a] relative overflow-hidden">
+    <section id="skills" className="py-16 md:py-24 bg-[#0a0a0a] relative overflow-hidden">
       {/* Angular Background Elements */}
       <div className="absolute top-0 left-0 w-[300px] h-[300px] bg-[#00d9ff]/5 transform rotate-45 -translate-x-1/2 -translate-y-1/2"></div>
       <div className="absolute bottom-0 right-0 w-[400px] h-[400px] border border-[#00d9ff]/10 transform rotate-45 translate-x-1/2 translate-y-1/2"></div>

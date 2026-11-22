@@ -18,25 +18,26 @@ const Elearning = () => {
     <div className="min-h-screen bg-[#0a0a0a] text-white">
       {/* Header */}
       <div className="bg-[#1a1a1a] border-b border-[#2a2a2a] sticky top-0 z-50">
-        <div className="container mx-auto px-6 py-4">
+        <div className="container mx-auto px-4 sm:px-6 py-3 sm:py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2 sm:gap-4 min-w-0">
               <Link to="/">
                 <Button
                   variant="outline"
-                  className="border-[#2a2a2a] text-gray-300 hover:border-[#00d9ff] hover:text-[#00d9ff]"
+                  aria-label="Back to Portfolio"
+                  className="border-[#2a2a2a] text-gray-300 hover:border-[#00d9ff] hover:text-[#00d9ff] px-3 sm:px-4"
                 >
-                  <ArrowLeft size={16} className="mr-2" />
-                  Back to Portfolio
+                  <ArrowLeft size={16} className="sm:mr-2" />
+                  <span className="hidden sm:inline">Back to Portfolio</span>
                 </Button>
               </Link>
-              <div className="flex items-center gap-2">
-                <div className="p-2 bg-[#00d9ff]/10 border border-[#00d9ff]/30 rounded">
+              <div className="flex items-center gap-2 min-w-0">
+                <div className="hidden min-[420px]:block p-2 bg-[#00d9ff]/10 border border-[#00d9ff]/30 rounded">
                   <BookOpen className="text-[#00d9ff]" size={20} />
                 </div>
-                <div>
-                  <h1 className="text-xl font-bold">E-Learning Platform</h1>
-                  <p className="text-sm text-gray-400">Learn Angular & Web Development</p>
+                <div className="min-w-0">
+                  <h1 className="text-base sm:text-xl font-bold truncate">E-Learning Platform</h1>
+                  <p className="hidden sm:block text-sm text-gray-400">Learn Angular & Web Development</p>
                 </div>
               </div>
             </div>
@@ -45,12 +46,12 @@ const Elearning = () => {
       </div>
 
       {/* Main Content */}
-      <div className="container mx-auto px-6 py-8">
+      <div className="container mx-auto px-4 sm:px-6 py-6 sm:py-8">
         {/* Hero Section */}
-        <div className="bg-gradient-to-r from-[#1a1a1a] to-[#2a2a2a] rounded-lg p-8 mb-8 border border-[#2a2a2a]">
-          <h2 className="text-4xl font-bold mb-4">Start Learning Today</h2>
+        <div className="bg-gradient-to-r from-[#1a1a1a] to-[#2a2a2a] rounded-lg p-5 sm:p-8 mb-8 border border-[#2a2a2a]">
+          <h2 className="text-3xl sm:text-4xl font-bold mb-4">Start Learning Today</h2>
           <p className="text-gray-400 text-lg mb-6">Access high-quality courses and master new skills</p>
-          <div className="flex gap-8">
+          <div className="flex flex-wrap gap-x-8 gap-y-4">
             <div>
               <p className="text-3xl font-bold text-[#00d9ff]">50+</p>
               <p className="text-gray-400">Courses</p>
@@ -67,7 +68,7 @@ const Elearning = () => {
         </div>
 
         {/* Filter Buttons */}
-        <div className="flex gap-4 mb-8">
+        <div className="flex flex-wrap gap-3 mb-8">
           <button
             onClick={() => setFilter('all')}
             className={`px-6 py-3 font-semibold transition-all duration-300 ${
@@ -146,7 +147,7 @@ const Elearning = () => {
                 </div>
 
                 <div className="flex items-center justify-between mb-4">
-                  <p className="text-sm text-gray-400">by {course.instructor}</p>
+                  <p className="hidden sm:block text-sm text-gray-400">by {course.instructor}</p>
                   <p className="text-xl font-bold text-[#00d9ff]">${course.price}</p>
                 </div>
 
