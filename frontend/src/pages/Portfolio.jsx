@@ -6,6 +6,8 @@ import Skills from "../components/Skills";
 import Projects from "../components/Projects";
 import Contact from "../components/Contact";
 import Navigation from "../components/Navigation";
+import GithubRepos from "../components/GithubRepos";
+import ScrollProgress from "../components/ScrollProgress";
 import { usePortfolio } from "../context/PortfolioContext";
 
 const Portfolio = () => {
@@ -24,12 +26,14 @@ const Portfolio = () => {
       <a href="#about" className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[60] focus:bg-[#00d9ff] focus:text-black focus:px-4 focus:py-2">
         Skip to content
       </a>
+      <ScrollProgress />
       <Navigation />
       <main>
         <Hero />
         <About />
         <Skills />
         <Projects />
+        <GithubRepos />
         <Contact />
       </main>
       <footer className="bg-[#1a1a1a] border-t border-[#2a2a2a] py-8">

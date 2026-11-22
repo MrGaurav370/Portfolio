@@ -30,7 +30,7 @@ export const projects = [
     description: "An Angular voice assistant that listens, understands and responds to spoken commands, with a local LLM brain via Ollama in the works.",
     technologies: ["Angular", "TypeScript", "Web Speech API", "Ollama"],
     image: img("photo-1620712943543-bcc4688e7485"),
-    demoUrl: "", githubUrl: "https://github.com/MrGaurav370/jarvis-project", route: "", featured: true,
+    demoUrl: "", githubUrl: "https://github.com/MrGaurav370/jarvis-project", route: "/jarvis", featured: true,
   },
   {
     id: 2,
@@ -62,7 +62,7 @@ export const projects = [
     description: "Kanban-style task manager with drag-and-drop and real-time collaboration.",
     technologies: ["Angular", "Angular CDK", "NgRx", "WebSocket"],
     image: img("photo-1454165804606-c3d57bc86b40"),
-    demoUrl: "", githubUrl: "", route: "", featured: false,
+    demoUrl: "", githubUrl: "", route: "/tasks", featured: false,
   },
   {
     id: 6,
@@ -70,7 +70,7 @@ export const projects = [
     description: "Patient management with appointment scheduling, records and prescriptions.",
     technologies: ["Angular", "PrimeNG", "RxJS", "REST API"],
     image: img("photo-1576091160399-112ba8d25d1d"),
-    demoUrl: "", githubUrl: "", route: "", featured: false,
+    demoUrl: "", githubUrl: "", route: "/healthcare", featured: false,
   },
   {
     id: 7,
@@ -78,6 +78,6 @@ export const projects = [
     description: "Location-based forecasts, interactive maps and weather alerts.",
     technologies: ["Angular", "RxJS", "Leaflet", "OpenWeather API"],
     image: img("photo-1592210454359-9043f067919b"),
-    demoUrl: "", githubUrl: "", route: "", featured: false,
+    demoUrl: "", githubUrl: "", route: "/weather", featured: false,
   },
 ];

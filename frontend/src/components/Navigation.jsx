@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Menu, X } from "lucide-react";
+import { Menu, Search, X } from "lucide-react";
+import { OPEN_PALETTE_EVENT } from "./CommandPalette";
 import useActiveSection from "../hooks/useActiveSection";
 
 const navLinks = [
@@ -54,6 +55,10 @@ const Navigation = () => {
                 {l.name}
               </button>
             ))}
+            <button onClick={() => window.dispatchEvent(new Event(OPEN_PALETTE_EVENT))} aria-label="Open command palette"
+              className="flex items-center gap-2 text-sm text-gray-400 border border-[#2a2a2a] px-3 py-1.5 hover:border-[#00d9ff] hover:text-[#00d9ff] transition-colors">
+              <Search size={14} /><span>Search</span><kbd className="text-xs text-gray-500">Ctrl K</kbd>
+            </button>
           </div>
 
           <button
