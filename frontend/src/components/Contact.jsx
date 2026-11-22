@@ -5,8 +5,11 @@ import { Textarea } from "./ui/textarea";
 import { Mail, MapPin, Phone } from "lucide-react";
 import { toast } from "../hooks/use-toast";
 import { Toaster } from "./ui/toaster";
+import { usePortfolio } from "../context/PortfolioContext";
+import { api, hasBackend } from "../services/api";
 
 const Contact = () => {
+  const { profile } = usePortfolio();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -27,20 +30,29 @@ const Contact = () => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Simulate form submission (will be replaced with backend integration)
-    setTimeout(() => {
+    try {
+      if (hasBackend) {
+        await api.submitContact(formData);
+        toast({ title: "Message sent!", description: "Thanks for reaching out. I'll get back to you soon." });
+      } else {
+        // Static hosting: no API to post to, so hand the message to the visitor's mail client.
+        const body = `${formData.message}\n\n- ${formData.name} (${formData.email})`;
+        window.location.href = `mailto:${profile.email}?subject=${encodeURIComponent(formData.subject)}&body=${encodeURIComponent(body)}`;
+        toast({ title: "Opening your email app", description: "Your message is pre-filled and ready to send." });
+      }
+      setFormData({ name: "", email: "", subject: "", message: "" });
+    } catch (err) {
+      const status = err?.response?.status;
       toast({
-        title: "Message Sent!",
-        description: "Thank you for reaching out. I'll get back to you soon.",
+        title: status === 429 ? "Too many messages" : "Couldn't send message",
+        description: status === 429
+          ? "Please wait a while before sending another."
+          : `Please try again, or email me directly at ${profile.email}.`,
+        variant: "destructive",
       });
-      setFormData({
-        name: "",
-        email: "",
-        subject: "",
-        message: ""
-      });
+    } finally {
       setIsSubmitting(false);
-    }, 1000);
+    }
   };
 
   return (
@@ -75,8 +87,8 @@ const Contact = () => {
                 </div>
                 <div>
                   <h4 className="text-white font-semibold mb-1">Email</h4>
-                  <a href="mailto:grvsinghthakur370@gmail.com" className="text-gray-400 hover:text-[#00d9ff] transition-colors duration-300">
-                    grvsinghthakur370@gmail.com
+                  <a href={`mailto:${profile.email}`} className="text-gray-400 hover:text-[#00d9ff] transition-colors duration-300">
+                    {profile.email}
                   </a>
                 </div>
               </div>
@@ -87,7 +99,7 @@ const Contact = () => {
                 </div>
                 <div>
                   <h4 className="text-white font-semibold mb-1">Phone</h4>
-                  <p className="text-gray-400">+91 7982300419</p>
+                  <p className="text-gray-400">{profile.phone}</p>
                 </div>
               </div>
 
@@ -97,7 +109,7 @@ const Contact = () => {
                 </div>
                 <div>
                   <h4 className="text-white font-semibold mb-1">Location</h4>
-                  <p className="text-gray-400">Inda</p>
+                  <p className="text-gray-400">{profile.location}</p>
                 </div>
               </div>
             </div>

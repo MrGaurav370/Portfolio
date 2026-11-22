@@ -1,80 +1,76 @@
 import React, { useState, useEffect } from "react";
 import { Menu, X } from "lucide-react";
-import { Button } from "./ui/button";
+import useActiveSection from "../hooks/useActiveSection";
+
+const navLinks = [
+  { name: "Home", id: "home" },
+  { name: "About", id: "about" },
+  { name: "Skills", id: "skills" },
+  { name: "Projects", id: "projects" },
+  { name: "Contact", id: "contact" },
+];
+const ids = navLinks.map((l) => l.id);
 
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const active = useActiveSection(ids);
 
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    const onScroll = () => setIsScrolled(window.scrollY > 50);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const scrollToSection = (sectionId) => {
-    const element = document.getElementById(sectionId);
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth" });
-      setIsOpen(false);
-    }
+  const go = (id) => {
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+    setIsOpen(false);
   };
 
-  const navLinks = [
-    { name: "Home", id: "home" },
-    { name: "About", id: "about" },
-    { name: "Skills", id: "skills" },
-    { name: "Projects", id: "projects" },
-    { name: "Contact", id: "contact" }
-  ];
+  const linkClass = (id) =>
+    `font-medium transition-colors duration-300 ${
+      active === id ? "text-[#00d9ff]" : "text-gray-300 hover:text-[#00d9ff]"
+    }`;
 
   return (
     <nav
+      aria-label="Primary"
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled ? "bg-[#0a0a0a]/95 backdrop-blur-sm border-b border-[#2a2a2a]" : "bg-transparent"
+        isScrolled || isOpen ? "bg-[#0a0a0a]/95 backdrop-blur-sm border-b border-[#2a2a2a]" : "bg-transparent"
       }`}
     >
       <div className="container mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
-          <div className="text-2xl font-bold">
+          <button onClick={() => go("home")} className="text-2xl font-bold" aria-label="Back to top">
             <span className="text-[#00d9ff]">GG</span>
             <span className="text-white">/</span>
-          </div>
+          </button>
 
-          {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
-            {navLinks.map((link) => (
-              <button
-                key={link.id}
-                onClick={() => scrollToSection(link.id)}
-                className="text-gray-300 hover:text-[#00d9ff] transition-colors duration-300 font-medium"
-              >
-                {link.name}
+            {navLinks.map((l) => (
+              <button key={l.id} onClick={() => go(l.id)} className={linkClass(l.id)}
+                aria-current={active === l.id ? "true" : undefined}>
+                {l.name}
               </button>
             ))}
           </div>
 
-          {/* Mobile Menu Button */}
           <button
             className="md:hidden text-white"
             onClick={() => setIsOpen(!isOpen)}
+            aria-label={isOpen ? "Close menu" : "Open menu"}
+            aria-expanded={isOpen}
           >
             {isOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
         </div>
 
-        {/* Mobile Navigation */}
         {isOpen && (
-          <div className="md:hidden mt-4 pb-4 space-y-4">
-            {navLinks.map((link) => (
-              <button
-                key={link.id}
-                onClick={() => scrollToSection(link.id)}
-                className="block w-full text-left text-gray-300 hover:text-[#00d9ff] transition-colors duration-300 font-medium py-2"
-              >
-                {link.name}
+          <div className="md:hidden mt-4 pb-4 space-y-2">
+            {navLinks.map((l) => (
+              <button key={l.id} onClick={() => go(l.id)} className={`block w-full text-left py-2 ${linkClass(l.id)}`}>
+                {l.name}
               </button>
             ))}
           </div>

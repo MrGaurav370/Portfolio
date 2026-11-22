@@ -1,7 +1,9 @@
 import React from "react";
-import { skills } from "../mock";
+import { usePortfolio } from "../context/PortfolioContext";
+import Reveal from "./Reveal";
 
 const Skills = () => {
+  const { skills } = usePortfolio();
   return (
     <section id="skills" className="py-24 bg-[#0a0a0a] relative overflow-hidden">
       {/* Angular Background Elements */}
@@ -13,15 +15,15 @@ const Skills = () => {
           <span className="text-[#00d9ff] font-semibold tracking-wider uppercase text-sm">Angular Framework Skills</span>
           <div className="w-20 h-1 bg-[#00d9ff] mt-2 mx-auto transform -skew-x-12"></div>
           <h2 className="text-4xl md:text-5xl font-black mt-4 text-white">
-            My <span className="text-[#00d9ff]\">Expertise</span>
+            My <span className="text-[#00d9ff]">Expertise</span>
           </h2>
         </div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {skills.map((skillCategory) => (
+          {skills.map((skillCategory, idx) => (
+            <Reveal key={skillCategory.id} delay={idx * 100}>
             <div
-              key={skillCategory.id}
-              className="bg-[#1a1a1a] border border-[#2a2a2a] p-6 transform transition-all duration-300 hover:border-[#00d9ff]/50 hover:-translate-y-2 group relative overflow-hidden"
+              className="h-full bg-[#1a1a1a] border border-[#2a2a2a] p-6 transform transition-all duration-300 hover:border-[#00d9ff]/50 hover:-translate-y-2 group relative overflow-hidden"
             >
               {/* Angular Top Accent */}
               <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#00d9ff] to-transparent transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-500"></div>
@@ -44,6 +46,7 @@ const Skills = () => {
                 </ul>
               </div>
             </div>
+            </Reveal>
           ))}
         </div>
       </div>

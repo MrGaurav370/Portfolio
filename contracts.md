@@ -3,9 +3,14 @@
 ## Overview
 This document outlines the API contracts between frontend and backend for the portfolio application.
 
-## Current Mock Data Location
-- **File**: `/app/frontend/src/mock.js`
-- **Data**: profileData, skills, projects
+## Fallback data
+- `frontend/src/mock.js` is used only when no backend is configured/reachable (mirrors `backend/seed_data.py`).
+
+## Auth
+Write endpoints (`PUT /profile`, `POST /skills`, `POST|PUT|DELETE /projects`) and `GET /contact/messages` require an `X-Admin-Key` header equal to the `ADMIN_API_KEY` env var (503 if unset, 401 if wrong).
+
+## Project extras
+Projects have an optional `route` (in-app demo path) and empty-string defaults for `demoUrl`/`githubUrl`. `GET /api/health` reports DB status.
 
 ## Backend API Endpoints
 
