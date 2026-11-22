@@ -46,7 +46,7 @@ const Checkout = () => {
       
       {/* Header */}
       <div className="bg-[#1a1a1a] border-b border-[#2a2a2a]">
-        <div className="container mx-auto px-6 py-4">
+        <div className="container mx-auto px-4 sm:px-6 py-3 sm:py-4">
           <Link to="/shop">
             <Button
               variant="outline"
@@ -60,10 +60,10 @@ const Checkout = () => {
       </div>
 
       {/* Checkout Form */}
-      <div className="container mx-auto px-6 py-12">
+      <div className="container mx-auto px-4 sm:px-6 py-8 sm:py-12">
         <div className="max-w-2xl mx-auto">
           <div className="text-center mb-8">
-            <h1 className="text-4xl font-bold mb-2">Checkout</h1>
+            <h1 className="text-3xl sm:text-4xl font-bold mb-2">Checkout</h1>
             <p className="text-gray-400">Complete your purchase</p>
           </div>
 

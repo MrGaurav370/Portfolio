@@ -37,7 +37,7 @@ const Navigation = () => {
     <nav
       aria-label="Primary"
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled || isOpen ? "bg-[#0a0a0a]/95 backdrop-blur-sm border-b border-[#2a2a2a]" : "bg-transparent"
+        isOpen ? "bg-[#0a0a0a] border-b border-[#2a2a2a]" : isScrolled ? "bg-[#0a0a0a]/95 backdrop-blur-sm border-b border-[#2a2a2a]" : "bg-transparent"
       }`}
     >
       <div className="container mx-auto px-6 py-4">
@@ -57,7 +57,7 @@ const Navigation = () => {
           </div>
 
           <button
-            className="md:hidden text-white"
+            className="md:hidden text-white p-2 -mr-2"
             onClick={() => setIsOpen(!isOpen)}
             aria-label={isOpen ? "Close menu" : "Open menu"}
             aria-expanded={isOpen}

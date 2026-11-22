@@ -40,7 +40,7 @@ const Hero = () => {
   ].filter((s) => s.href);
 
   return (
-    <section id="home" className="relative min-h-screen flex items-center overflow-hidden">
+    <section id="home" className="relative min-h-[100svh] flex items-center overflow-hidden">
       <div className="absolute inset-0 overflow-hidden" aria-hidden="true">
         <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-[#00d9ff]/5 transform rotate-45 translate-x-1/2 -translate-y-1/2"></div>
         <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-[#00d9ff]/5 transform rotate-45 -translate-x-1/2 translate-y-1/2"></div>

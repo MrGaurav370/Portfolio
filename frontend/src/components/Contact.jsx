@@ -56,7 +56,7 @@ const Contact = () => {
   };
 
   return (
-    <section id="contact" className="py-24 bg-[#0a0a0a] relative overflow-hidden">
+    <section id="contact" className="py-16 md:py-24 bg-[#0a0a0a] relative overflow-hidden">
       <Toaster />
       
       {/* Angular Background Elements */}
@@ -116,7 +116,7 @@ const Contact = () => {
           </div>
 
           {/* Contact Form */}
-          <div className="bg-[#1a1a1a] border border-[#2a2a2a] p-8 relative overflow-hidden group hover:border-[#00d9ff]/50 transition-all duration-300">
+          <div className="bg-[#1a1a1a] border border-[#2a2a2a] p-5 sm:p-8 relative overflow-hidden group hover:border-[#00d9ff]/50 transition-all duration-300">
             {/* Angular Corner Accent */}
             <div className="absolute top-0 right-0 w-32 h-32 bg-[#00d9ff]/5 transform rotate-45 translate-x-16 -translate-y-16 group-hover:bg-[#00d9ff]/10 transition-all duration-300"></div>
             

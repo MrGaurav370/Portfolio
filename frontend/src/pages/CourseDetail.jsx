@@ -21,7 +21,7 @@ const CourseDetail = () => {
     <div className="min-h-screen bg-[#0a0a0a] text-white">
       {/* Header */}
       <div className="bg-[#1a1a1a] border-b border-[#2a2a2a] sticky top-0 z-50">
-        <div className="container mx-auto px-6 py-4">
+        <div className="container mx-auto px-4 sm:px-6 py-4">
           <Link to="/elearning">
             <Button
               variant="outline"
@@ -36,7 +36,7 @@ const CourseDetail = () => {
 
       {/* Course Header */}
       <div className="bg-gradient-to-r from-[#1a1a1a] to-[#2a2a2a] border-b border-[#2a2a2a]">
-        <div className="container mx-auto px-6 py-12">
+        <div className="container mx-auto px-4 sm:px-6 py-12">
           <div className="grid md:grid-cols-3 gap-8">
             <div className="md:col-span-2">
               <div className="flex items-center gap-2 mb-4">
@@ -50,7 +50,7 @@ const CourseDetail = () => {
               <div className="flex items-center gap-6 text-sm">
                 <div className="flex items-center gap-2">
                   <Star size={16} className="fill-yellow-500 text-yellow-500" />
-                  <span>{course.rating} ({course.reviews} reviews)</span>
+                  <span>{course.rating} rating</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <Users size={16} />
@@ -88,12 +88,12 @@ const CourseDetail = () => {
       </div>
 
       {/* Course Content */}
-      <div className="container mx-auto px-6 py-8">
+      <div className="container mx-auto px-4 sm:px-6 py-8">
         {/* Tabs */}
-        <div className="flex gap-4 mb-8 border-b border-[#2a2a2a]">
+        <div className="flex gap-1 sm:gap-4 mb-8 border-b border-[#2a2a2a] overflow-x-auto whitespace-nowrap">
           <button
             onClick={() => setActiveTab('overview')}
-            className={`px-4 py-2 font-semibold transition-colors ${
+            className={`px-3 sm:px-4 py-2 font-semibold transition-colors ${
               activeTab === 'overview'
                 ? 'text-[#00d9ff] border-b-2 border-[#00d9ff]'
                 : 'text-gray-400 hover:text-white'
@@ -103,7 +103,7 @@ const CourseDetail = () => {
           </button>
           <button
             onClick={() => setActiveTab('curriculum')}
-            className={`px-4 py-2 font-semibold transition-colors ${
+            className={`px-3 sm:px-4 py-2 font-semibold transition-colors ${
               activeTab === 'curriculum'
                 ? 'text-[#00d9ff] border-b-2 border-[#00d9ff]'
                 : 'text-gray-400 hover:text-white'
@@ -113,7 +113,7 @@ const CourseDetail = () => {
           </button>
           <button
             onClick={() => setActiveTab('instructor')}
-            className={`px-4 py-2 font-semibold transition-colors ${
+            className={`px-3 sm:px-4 py-2 font-semibold transition-colors ${
               activeTab === 'instructor'
                 ? 'text-[#00d9ff] border-b-2 border-[#00d9ff]'
                 : 'text-gray-400 hover:text-white'

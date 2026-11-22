@@ -46,7 +46,7 @@ const Portfolio = () => {
         <button
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
           aria-label="Back to top"
-          className="fixed bottom-6 right-6 z-40 bg-[#00d9ff] text-black p-3 hover:bg-[#00b8e6] transition-colors"
+          className="fixed bottom-4 right-4 md:bottom-6 md:right-6 z-40 bg-[#00d9ff]/90 text-black p-2.5 md:p-3 hover:bg-[#00b8e6] transition-colors"
         >
           <ArrowUp size={20} />
         </button>
