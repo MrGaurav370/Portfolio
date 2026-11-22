@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Redirecting…</title>
+    <!-- GitHub Pages serves this for unknown paths; bounce to index.html so React Router can handle them -->
+    <script>
+      var l = window.location;
+      l.replace(l.protocol + "//" + l.hostname + (l.port ? ":" + l.port : "") + "/?/" +
+        l.pathname.slice(1).split("&").join("~and~") +
+        (l.search ? "&" + l.search.slice(1).split("&").join("~and~") : "") + l.hash);
+    </script>
+  </head>
+  <body></body>
+</html>

@@ -1,0 +1,22 @@
+services:
+  mongo:
+    image: mongo:7
+    volumes: [mongo_data:/data/db]
+  backend:
+    build: ./backend
+    environment:
+      MONGO_URL: mongodb://mongo:27017
+      DB_NAME: portfolio_db
+      CORS_ORIGINS: http://localhost:3000
+      ADMIN_API_KEY: ${ADMIN_API_KEY:-change-me}
+    depends_on: [mongo]
+    ports: ["8000:8000"]
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        REACT_APP_BACKEND_URL: http://localhost:8000
+    depends_on: [backend]
+    ports: ["3000:80"]
+volumes:
+  mongo_data:

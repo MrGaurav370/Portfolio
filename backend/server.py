@@ -1,173 +1,172 @@
-from fastapi import FastAPI, APIRouter, HTTPException
-from dotenv import load_dotenv
-from starlette.middleware.cors import CORSMiddleware
-from motor.motor_asyncio import AsyncIOMotorClient
-import os
+"""FastAPI backend for the portfolio."""
 import logging
+import os
+import secrets
+import time
+from collections import defaultdict, deque
+from contextlib import asynccontextmanager
 from pathlib import Path
-from models import (
-    Profile, ProfileUpdate, 
-    Skill, SkillCreate, 
-    Project, ProjectCreate, ProjectUpdate,
-    ContactMessage, ContactCreate
-)
 from typing import List, Optional
-from datetime import datetime
 
+from dotenv import load_dotenv
+from fastapi import APIRouter, Depends, FastAPI, Header, HTTPException, Request
+from motor.motor_asyncio import AsyncIOMotorClient
+from starlette.middleware.cors import CORSMiddleware
+
+from models import (
+    ContactCreate, ContactMessage, Profile, ProfileUpdate, Project,
+    ProjectCreate, ProjectUpdate, Skill, SkillCreate, utcnow,
+)
 
 ROOT_DIR = Path(__file__).parent
-load_dotenv(ROOT_DIR / '.env')
+load_dotenv(ROOT_DIR / ".env")
 
-# MongoDB connection
-mongo_url = os.environ.get('MONGO_URL', 'mongodb://localhost:27017')
-client = AsyncIOMotorClient(mongo_url)
-db = client[os.environ.get('DB_NAME', 'portfolio_db')]
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+logger = logging.getLogger("portfolio")
 
-# Create the main app without a prefix
-app = FastAPI()
+CONTACT_LIMIT = int(os.environ.get("CONTACT_RATE_LIMIT", "5"))  # messages per window
+CONTACT_WINDOW = 3600  # seconds
+_contact_hits: dict = defaultdict(deque)
 
-# Create a router with the /api prefix
-api_router = APIRouter(prefix="/api")
 
-# Add your routes to the router instead of directly to app
-@api_router.get("/")
-async def root():
-    return {"message": "Hello World"}
+def create_app(db=None) -> FastAPI:
+    """App factory. Pass a database to override the Mongo connection (used in tests)."""
+    client = None
+    if db is None:
+        client = AsyncIOMotorClient(os.environ.get("MONGO_URL", "mongodb://localhost:27017"))
+        db = client[os.environ.get("DB_NAME", "portfolio_db")]
 
-# ==================== PROFILE ENDPOINTS ====================
-@api_router.get("/profile", response_model=Profile)
-async def get_profile():
-    """Get profile information"""
-    profile = await db.profile.find_one({})
-    if not profile:
-        raise HTTPException(status_code=404, detail="Profile not found")
-    profile.pop("_id", None)
-    return Profile(**profile)
+    @asynccontextmanager
+    async def lifespan(_: FastAPI):
+        await db.projects.create_index("id", unique=True)
+        await db.skills.create_index("id", unique=True)
+        if os.environ.get("AUTO_SEED", "true").lower() == "true" and await db.profile.count_documents({}) == 0:
+            from seed_data import profile_data, projects_data, skills_data
+            await db.profile.insert_one({**profile_data, "updated_at": utcnow()})
+            await db.skills.insert_many([{**s, "created_at": utcnow()} for s in skills_data])
+            await db.projects.insert_many([{**p, "created_at": utcnow(), "updated_at": utcnow()} for p in projects_data])
+            logger.info("Database was empty - seeded default portfolio data")
+        yield
+        if client:
+            client.close()
 
-@api_router.put("/profile", response_model=Profile)
-async def update_profile(profile_update: ProfileUpdate):
-    """Update profile information"""
-    update_data = profile_update.dict(exclude_unset=True)
-    update_data["updated_at"] = datetime.utcnow()
-    
-    result = await db.profile.update_one({}, {"$set": update_data}, upsert=True)
-    updated_profile = await db.profile.find_one({})
-    updated_profile.pop("_id", None)
-    return Profile(**updated_profile)
+    app = FastAPI(title="Portfolio API", version="2.0.0", lifespan=lifespan)
 
-# ==================== SKILLS ENDPOINTS ====================
-@api_router.get("/skills", response_model=List[Skill])
-async def get_skills():
-    """Get all skill categories"""
-    skills = await db.skills.find().sort("id", 1).to_list(100)
-    for skill in skills:
-        skill.pop("_id", None)
-    return [Skill(**skill) for skill in skills]
+    # ---- auth: write endpoints need X-Admin-Key matching ADMIN_API_KEY
+    async def require_admin(x_admin_key: Optional[str] = Header(default=None)):
+        expected = os.environ.get("ADMIN_API_KEY")
+        if not expected:
+            raise HTTPException(503, "Admin endpoints are disabled (ADMIN_API_KEY is not set)")
+        if not x_admin_key or not secrets.compare_digest(x_admin_key, expected):
+            raise HTTPException(401, "Invalid or missing admin key")
 
-@api_router.post("/skills", response_model=Skill)
-async def create_skill(skill: SkillCreate):
-    """Create new skill category"""
-    existing_skills = await db.skills.find().sort("id", -1).limit(1).to_list(1)
-    next_id = existing_skills[0]["id"] + 1 if existing_skills else 1
-    
-    skill_dict = skill.dict()
-    skill_dict["id"] = next_id
-    skill_dict["created_at"] = datetime.utcnow()
-    
-    await db.skills.insert_one(skill_dict)
-    skill_dict.pop("_id", None)
-    return Skill(**skill_dict)
+    admin = [Depends(require_admin)]
+    api = APIRouter(prefix="/api")
 
-# ==================== PROJECTS ENDPOINTS ====================
-@api_router.get("/projects", response_model=List[Project])
-async def get_projects(featured: Optional[bool] = None):
-    """Get all projects, optionally filter by featured"""
-    query = {"featured": featured} if featured is not None else {}
-    projects = await db.projects.find(query).sort("id", 1).to_list(100)
-    for project in projects:
-        project.pop("_id", None)
-    return [Project(**project) for project in projects]
+    async def next_id(collection) -> int:
+        last = await collection.find().sort("id", -1).limit(1).to_list(1)
+        return last[0]["id"] + 1 if last else 1
 
-@api_router.get("/projects/{project_id}", response_model=Project)
-async def get_project(project_id: int):
-    """Get single project by ID"""
-    project = await db.projects.find_one({"id": project_id})
-    if not project:
-        raise HTTPException(status_code=404, detail="Project not found")
-    project.pop("_id", None)
-    return Project(**project)
+    @api.get("/")
+    async def root():
+        return {"message": "Portfolio API", "docs": "/docs"}
 
-@api_router.post("/projects", response_model=Project)
-async def create_project(project: ProjectCreate):
-    """Create new project"""
-    existing_projects = await db.projects.find().sort("id", -1).limit(1).to_list(1)
-    next_id = existing_projects[0]["id"] + 1 if existing_projects else 1
-    
-    project_dict = project.dict()
-    project_dict["id"] = next_id
-    project_dict["created_at"] = datetime.utcnow()
-    project_dict["updated_at"] = datetime.utcnow()
-    
-    await db.projects.insert_one(project_dict)
-    project_dict.pop("_id", None)
-    return Project(**project_dict)
+    @api.get("/health")
+    async def health():
+        try:
+            await db.profile.count_documents({})
+            return {"status": "ok", "database": "up"}
+        except Exception:  # noqa: BLE001
+            raise HTTPException(503, "database unavailable")
 
-@api_router.put("/projects/{project_id}", response_model=Project)
-async def update_project(project_id: int, project_update: ProjectUpdate):
-    """Update project"""
-    update_data = project_update.dict(exclude_unset=True)
-    update_data["updated_at"] = datetime.utcnow()
-    
-    result = await db.projects.update_one({"id": project_id}, {"$set": update_data})
-    if result.matched_count == 0:
-        raise HTTPException(status_code=404, detail="Project not found")
-    
-    updated_project = await db.projects.find_one({"id": project_id})
-    updated_project.pop("_id", None)
-    return Project(**updated_project)
+    # ---- profile
+    @api.get("/profile", response_model=Profile)
+    async def get_profile():
+        doc = await db.profile.find_one({}, {"_id": 0})
+        if not doc:
+            raise HTTPException(404, "Profile not found")
+        return Profile(**doc)
 
-@api_router.delete("/projects/{project_id}")
-async def delete_project(project_id: int):
-    """Delete project"""
-    result = await db.projects.delete_one({"id": project_id})
-    if result.deleted_count == 0:
-        raise HTTPException(status_code=404, detail="Project not found")
-    return {"success": True, "message": "Project deleted successfully"}
+    @api.put("/profile", response_model=Profile, dependencies=admin)
+    async def update_profile(update: ProfileUpdate):
+        data = update.model_dump(exclude_unset=True)
+        data["updated_at"] = utcnow()
+        await db.profile.update_one({}, {"$set": data}, upsert=True)
+        return Profile(**await db.profile.find_one({}, {"_id": 0}))
 
-# ==================== CONTACT ENDPOINTS ====================
-@api_router.post("/contact", response_model=dict)
-async def submit_contact(contact: ContactCreate):
-    """Submit contact form"""
-    contact_dict = ContactMessage(**contact.dict()).dict()
-    await db.contacts.insert_one(contact_dict)
-    return {"success": True, "message": "Message sent successfully"}
+    # ---- skills
+    @api.get("/skills", response_model=List[Skill])
+    async def get_skills():
+        return [Skill(**s) for s in await db.skills.find({}, {"_id": 0}).sort("id", 1).to_list(100)]
 
-@api_router.get("/contact/messages", response_model=List[ContactMessage])
-async def get_contact_messages():
-    """Get all contact messages (admin endpoint)"""
-    messages = await db.contacts.find().sort("created_at", -1).to_list(100)
-    for message in messages:
-        message.pop("_id", None)
-    return [ContactMessage(**message) for message in messages]
+    @api.post("/skills", response_model=Skill, dependencies=admin)
+    async def create_skill(skill: SkillCreate):
+        doc = {**skill.model_dump(), "id": await next_id(db.skills), "created_at": utcnow()}
+        await db.skills.insert_one(dict(doc))
+        return Skill(**doc)
 
-# Include the router in the main app
-app.include_router(api_router)
+    # ---- projects
+    @api.get("/projects", response_model=List[Project])
+    async def get_projects(featured: Optional[bool] = None):
+        query = {} if featured is None else {"featured": featured}
+        return [Project(**p) for p in await db.projects.find(query, {"_id": 0}).sort("id", 1).to_list(200)]
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_credentials=True,
-    allow_origins=os.environ.get('CORS_ORIGINS', '*').split(','),
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+    @api.get("/projects/{project_id}", response_model=Project)
+    async def get_project(project_id: int):
+        doc = await db.projects.find_one({"id": project_id}, {"_id": 0})
+        if not doc:
+            raise HTTPException(404, "Project not found")
+        return Project(**doc)
 
-# Configure logging
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-)
-logger = logging.getLogger(__name__)
+    @api.post("/projects", response_model=Project, dependencies=admin)
+    async def create_project(project: ProjectCreate):
+        now = utcnow()
+        doc = {**project.model_dump(), "id": await next_id(db.projects), "created_at": now, "updated_at": now}
+        await db.projects.insert_one(dict(doc))
+        return Project(**doc)
 
-@app.on_event("shutdown")
-async def shutdown_db_client():
-    client.close()
+    @api.put("/projects/{project_id}", response_model=Project, dependencies=admin)
+    async def update_project(project_id: int, update: ProjectUpdate):
+        data = update.model_dump(exclude_unset=True)
+        data["updated_at"] = utcnow()
+        result = await db.projects.update_one({"id": project_id}, {"$set": data})
+        if result.matched_count == 0:
+            raise HTTPException(404, "Project not found")
+        return Project(**await db.projects.find_one({"id": project_id}, {"_id": 0}))
+
+    @api.delete("/projects/{project_id}", dependencies=admin)
+    async def delete_project(project_id: int):
+        result = await db.projects.delete_one({"id": project_id})
+        if result.deleted_count == 0:
+            raise HTTPException(404, "Project not found")
+        return {"success": True, "message": "Project deleted successfully"}
+
+    # ---- contact
+    @api.post("/contact", response_model=dict)
+    async def submit_contact(contact: ContactCreate, request: Request):
+        ip = request.client.host if request.client else "unknown"
+        hits, now = _contact_hits[ip], time.monotonic()
+        while hits and now - hits[0] > CONTACT_WINDOW:
+            hits.popleft()
+        if len(hits) >= CONTACT_LIMIT:
+            raise HTTPException(429, "Too many messages. Please try again later.")
+        hits.append(now)
+        await db.contacts.insert_one(ContactMessage(**contact.model_dump()).model_dump())
+        return {"success": True, "message": "Message sent successfully"}
+
+    @api.get("/contact/messages", response_model=List[ContactMessage], dependencies=admin)
+    async def get_contact_messages():
+        docs = await db.contacts.find({}, {"_id": 0}).sort("created_at", -1).to_list(200)
+        return [ContactMessage(**d) for d in docs]
+
+    app.include_router(api)
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=[o.strip() for o in os.environ.get("CORS_ORIGINS", "http://localhost:3000").split(",") if o.strip()],
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
+    return app
+
+
+app = create_app()
