@@ -1,8 +1,24 @@
 # Gaurav Gaur — Portfolio
 
-Angular-developer portfolio: **React 19 + Tailwind** frontend, **FastAPI + MongoDB** backend, three playable in-app demos (dashboard, e-learning, shop).
+Angular-developer portfolio: **React 19 + Tailwind** frontend, **FastAPI + MongoDB** backend, and seven playable in-app demos.
 
 [![CI](https://github.com/MrGaurav370/Portfolio/actions/workflows/ci.yml/badge.svg)](https://github.com/MrGaurav370/Portfolio/actions/workflows/ci.yml)
+
+## Live demos (all run in the browser, no backend needed)
+| Route | Demo | Highlights |
+|---|---|---|
+| `/jarvis` | J.A.R.V.I.S. voice assistant | Web Speech API voice in/out, spoken math, voice navigation, optional local **Ollama** LLM fallback |
+| `/dashboard` | Enterprise dashboard | Charts, KPIs, user table |
+| `/elearning` | E-learning platform | Courses, progress, detail pages |
+| `/shop` | Shopping cart | Catalogue, cart, checkout |
+| `/tasks` | Task manager | Kanban drag & drop (+ touch buttons), search, saved locally |
+| `/healthcare` | Healthcare portal | Appointment booking with double-booking protection, patient records, refill requests |
+| `/weather` | Weather forecast | Live Open-Meteo data, city search, geolocation, hourly + 7-day, derived alerts, offline sample fallback |
+
+Site-wide: **Ctrl/⌘+K command palette**, scroll-progress bar and a live **GitHub repos** section (hidden if GitHub is unreachable).
+
+### J.A.R.V.I.S. with a local LLM
+Open the demo → gear icon → enable Ollama. Start Ollama with `OLLAMA_ORIGINS=*` so the page may call it. Requests go only to your own machine.
 
 ## How it works
 - The frontend works **with or without** the backend. With `REACT_APP_BACKEND_URL` set it loads profile/skills/projects from the API and posts the contact form there; without it (e.g. GitHub Pages) it uses `frontend/src/mock.js` and the contact form opens a pre-filled `mailto:`.
@@ -37,6 +53,7 @@ Details: [`contracts.md`](contracts.md).
 ## Tests
 ```bash
 pip install -r backend/requirements-dev.txt && pytest -q   # 8 API tests, in-memory Mongo
+cd frontend && yarn test --watchAll=false   # 22 tests: voice parser, kanban, booking, weather
 cd frontend && yarn build
 ```
 
